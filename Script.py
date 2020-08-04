@@ -47,7 +47,7 @@ class Leetcode:
         try:
             # Get function to make a https request. Go to the URL specified by the user (wait for it to load)
             driver.get(self.url)
-            time.sleep(10)
+            time.sleep(3)
 
         except:
             pass
@@ -60,7 +60,11 @@ class Leetcode:
 
     # To parse the input test cases
     def parse(self, path = "testcases.txt"):
-        pass
+        fp = open(path, "r")
+        file = fp.readlines()
+        testcases = ("".join(file)).split(';\n')
+        fp.close()
+        return testcases
 
     def test(self):
         pass
@@ -100,6 +104,10 @@ if __name__ == "__main__":
         testcases = lc.parse(path)
     else:
         testcases = lc.parse()
+
+    
+    for i in testcases:
+        print(i)
 
     if(testcases):
         print("The test cases were parsed and loaded successfully")
