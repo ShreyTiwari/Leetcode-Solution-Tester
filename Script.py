@@ -58,6 +58,9 @@ class Leetcode:
         
         return flag
 
+    # To parse the input test cases
+    def parse(self, path = "testcases.txt"):
+        pass
 
 if __name__ == "__main__":
 
@@ -66,40 +69,60 @@ if __name__ == "__main__":
     # Copy and paste the url of the problem statement
     url = input("Please enter the problem statement's URL: ")
 
-    print("\nAttempting to open the browser...")
-    print("-------------------------------------------")
+    print("\n-------------------------------------------")
+    print("Attempting to open the browser...")
 
     # Open the Leetcode website
-    lc = Leetcode(url)
+    lc = None
+    if url:
+        lc = Leetcode(url)
+    else:
+        lc = Leetcode()
     success = lc.open()
     
     if(success):
-        print("Leetcode opened in successfully. Please")
-        print("-------------------------------------------\n")
+        print("Leetcode opened successfully.")
     else:
         print("There was an Error.")
-        print("-------------------------------------------\n")
-        print("Closing Browser Session")
+        print("Closing the Browser session... ")
         lc.closeBrowser()
         exit(1)
+    print("-------------------------------------------\n")
 
+    # Parsing the input test cases
+    print("Please enter the path to your input testcases file: ")
+    path = input()
+    print("Proceeding to parse the input test cases...")
+    testcases = None
+    if path:
+        testcases = lc.parse(path)
+    else:
+        testcases = lc.parse()
 
-    # Getting the required data
-    ig.goToHomePage()
-    followers = ig.getFollowers()
-    followingAccounts = set(ig.getFollowingAccounts())
+    if(testcases):
+        print("The test cases were parsed and loaded successfully")
+    else:
+        print("There was an Error while parsing the test cases.")
+        print("Closing the Browser session... ")
+        lc.closeBrowser()
+        exit(1)
+    print("-------------------------------------------\n")
 
+    choice = 'y'
+    yes = ['y', 'Y', 'yes', 'Yes']
+
+    while choice in yes:
+        print("Do you wish to run the test cases now? (y/n): ")
+        choice = input()
+
+        
+        print("\n--------------------------- Result of the execution ---------------------------")
+        res = ["Failed", "Pass"]
+        for i in range(len(results)):
+            print("Test case ", i, ": ", res[results[i]])
+
+    
+    
+    print("Exiting.")
     ig.closeBrowser()
-
-    # The important part is the difference (followingAccounts - Followers), i.e who you are following but are not following you
-    for follower in followers:
-        if(follower in followingAccounts):
-            followingAccounts.remove(follower)
-
-    print("\n--------------------------- Result ---------------------------")
-    print("Number of accounts not following you back are: ", len(followingAccounts))
-    print("The people you need to stop following are:")
-    for i in followingAccounts:
-        print(i)
-
     exit(0)
