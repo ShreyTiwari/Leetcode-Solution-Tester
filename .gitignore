@@ -1,3 +1,2 @@
 # All the files to be ignored while pulling and pushing from the repository.
 testcases.txt
-geckodriver.log

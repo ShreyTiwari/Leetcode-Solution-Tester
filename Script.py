@@ -17,14 +17,14 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # System libraries that will come in handy
 import time
-
+from pynput.keyboard import Key, Controller
 
 """ The Leetcode class with all the functionality """
 class Leetcode:
     # Initialization of the object at the time of creation
     def __init__(self, url = "https://www.leetcode.com"):         
         profile = webdriver.FirefoxProfile()
-        profile.set_preference("browser.privatebrowsing.autostart", True)
+        #profile.set_preference("browser.privatebrowsing.autostart", True)
         profile.set_preference("browser.fullscreen.autohide", True)
         
         self.url = url
@@ -64,10 +64,68 @@ class Leetcode:
         file = fp.readlines()
         testcases = ("".join(file)).split(';\n')
         fp.close()
-        return testcases
+        return testcases[:-1]
 
-    def test(self):
-        pass
+    # Run the test cases
+    def test(self, testcases):
+        results = []
+        
+        driver = self.driver
+        driver.maximize_window()
+        keyboard = Controller()
+        
+        # Open the console tab
+        button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div[1]/div/div[3]/div/div[3]/div[1]/button")
+        button.click()
+        time.sleep(5)
+
+        for testcase in testcases:
+            # Click on the testcase tab
+            button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div[1]/div/div[3]/div/div[2]/div/div/div[1]/div/div[1]/div/div[1]/div")
+            button.click()
+            time.sleep(1)
+            
+            # Click on the testcase entry area
+            # button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div[1]/div/div[3]/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[2]/div/div[3]/div/div")
+            # button.click()
+            # time.sleep(1)
+
+            # button.clear()
+            # button.send_keys(testcase)
+
+            # Clear whatever is present
+            keyboard.press(Key.tab)
+            print("Pressed tab")
+            time.sleep(10)
+
+            with keyboard.pressed(Key.ctrl):
+                keyboard.press('a')
+                keyboard.release('a')
+            keyboard.press(Key.backspace)
+            print("Cleared selection")
+            time.sleep(1)
+
+            # Type in the test case
+            keyboard.type(testcase)
+
+            # Click on the run test button
+            button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div[1]/div/div[3]/div/div[3]/div[2]/button[1]")
+            button.click()
+            time.sleep(5)
+
+            # Check the results
+            res = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div[1]/div/div[3]/div/div[2]/div/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div[1]")
+            if res.text == "Accepted":
+                results.append(1)
+            else:
+                results.append(0)
+
+        # Close the console tab
+        button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div[1]/div/div[3]/div/div[3]/div[1]/button")
+        button.click()
+        time.sleep(1)
+
+        return results
 
 if __name__ == "__main__":
 
@@ -105,9 +163,8 @@ if __name__ == "__main__":
     else:
         testcases = lc.parse()
 
-    
     for i in testcases:
-        print(i)
+        print("Testcase: ", i)
 
     if(testcases):
         print("The test cases were parsed and loaded successfully")
@@ -117,16 +174,15 @@ if __name__ == "__main__":
         lc.closeBrowser()
         exit(1)
     print("-------------------------------------------\n")
-    print("Do you wish to run the test cases now? (y/n): ")
-    choice = input()
+    choice = input("Do you wish to run the test cases now? (y/n): ")
 
     yes = ['y', 'Y', 'yes', 'Yes']
     while choice in yes:
         # Run the test cases
         try:
-            results = lc.test()
+            results = lc.test(testcases)
         except:
-            printf("There was an Error while execution.")
+            print("There was an Error while execution.")
             break
         
         print("\n--------------------------- Result of the execution ---------------------------")
@@ -135,8 +191,7 @@ if __name__ == "__main__":
             print("Test case ", i, ": ", res[results[i]])
 
         print("\n-------------------------------------------")
-        print("Re-Run the tests? (y/n): ")
-        choice = input()    
+        choice = input("Re-Run the tests? (y/n): ")    
     
     print("Exiting.")
     lc.closeBrowser()
