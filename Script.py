@@ -22,7 +22,7 @@ import time
 """ The Leetcode class with all the functionality """
 class Leetcode:
     # Initialization of the object at the time of creation
-    def __init__(self, url = "leetcode.com"):         
+    def __init__(self, url = "https://www.leetcode.com"):         
         profile = webdriver.FirefoxProfile()
         profile.set_preference("browser.privatebrowsing.autostart", True)
         profile.set_preference("browser.fullscreen.autohide", True)
@@ -47,7 +47,7 @@ class Leetcode:
         try:
             # Get function to make a https request. Go to the URL specified by the user (wait for it to load)
             driver.get(self.url)
-            time.sleep(3)
+            time.sleep(10)
 
         except:
             pass
@@ -60,6 +60,9 @@ class Leetcode:
 
     # To parse the input test cases
     def parse(self, path = "testcases.txt"):
+        pass
+
+    def test(self):
         pass
 
 if __name__ == "__main__":
@@ -90,8 +93,7 @@ if __name__ == "__main__":
     print("-------------------------------------------\n")
 
     # Parsing the input test cases
-    print("Please enter the path to your input testcases file: ")
-    path = input()
+    path = input("Please enter the path to your input testcases file: ")
     print("Proceeding to parse the input test cases...")
     testcases = None
     if path:
@@ -107,22 +109,27 @@ if __name__ == "__main__":
         lc.closeBrowser()
         exit(1)
     print("-------------------------------------------\n")
+    print("Do you wish to run the test cases now? (y/n): ")
+    choice = input()
 
-    choice = 'y'
     yes = ['y', 'Y', 'yes', 'Yes']
-
     while choice in yes:
-        print("Do you wish to run the test cases now? (y/n): ")
-        choice = input()
-
+        # Run the test cases
+        try:
+            results = lc.test()
+        except:
+            printf("There was an Error while execution.")
+            break
         
         print("\n--------------------------- Result of the execution ---------------------------")
         res = ["Failed", "Pass"]
         for i in range(len(results)):
             print("Test case ", i, ": ", res[results[i]])
 
-    
+        print("\n-------------------------------------------")
+        print("Re-Run the tests? (y/n): ")
+        choice = input()    
     
     print("Exiting.")
-    ig.closeBrowser()
+    lc.closeBrowser()
     exit(0)
