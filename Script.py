@@ -68,10 +68,10 @@ class Leetcode:
 
     # Run the test cases
     def test(self, testcases):
+        time.sleep(3)
         results = []
         
         driver = self.driver
-        driver.maximize_window()
         keyboard = Controller()
         
         # Open the console tab
@@ -95,23 +95,23 @@ class Leetcode:
 
             # Clear whatever is present
             keyboard.press(Key.tab)
-            print("Pressed tab")
-            time.sleep(10)
+            time.sleep(0.1)
 
             with keyboard.pressed(Key.ctrl):
                 keyboard.press('a')
                 keyboard.release('a')
             keyboard.press(Key.backspace)
-            print("Cleared selection")
+            print("Testing new test case.")
             time.sleep(1)
 
             # Type in the test case
             keyboard.type(testcase)
+            time.sleep(1)
 
             # Click on the run test button
             button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div[1]/div/div[3]/div/div[3]/div[2]/button[1]")
             button.click()
-            time.sleep(5)
+            time.sleep(3)
 
             # Check the results
             res = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div[1]/div/div[3]/div/div[2]/div/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div[1]")
@@ -119,6 +119,7 @@ class Leetcode:
                 results.append(1)
             else:
                 results.append(0)
+            time.sleep(1)
 
         # Close the console tab
         button = driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div[1]/div/div[3]/div/div[3]/div[1]/button")
@@ -164,7 +165,7 @@ if __name__ == "__main__":
         testcases = lc.parse()
 
     for i in testcases:
-        print("Testcase: ", i)
+        print("Testcase: ", i, end="")
 
     if(testcases):
         print("The test cases were parsed and loaded successfully")
